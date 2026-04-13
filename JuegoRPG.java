@@ -270,4 +270,3 @@ public class JuegoRPG extends JFrame {
     }
 }
 
-a
