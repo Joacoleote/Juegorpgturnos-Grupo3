@@ -269,3 +269,5 @@ public class JuegoRPG extends JFrame {
         SwingUtilities.invokeLater(() -> new JuegoRPG().setVisible(true));
     }
 }
+
+a
