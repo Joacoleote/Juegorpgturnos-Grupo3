@@ -1,0 +1,26 @@
+title Turno de Combate - RPG (UADE)
+
+participant Sistema
+participant Personaje
+participant Enemigo
+participant Interfaz
+
+Sistema->Interfaz: Mostrar opciones de turno (Atacar, Habilidad, Defender)
+Interfaz->Personaje: Jugador selecciona "Usar Habilidad"
+Personaje->Personaje: Verificar Maná suficiente
+alt tiene maná
+    Personaje->Enemigo: Ejecutar Habilidad (Cálculo de daño)
+    Enemigo->Enemigo: Restar Vida (Vida - (Poder - Defensa))
+    Enemigo-->>Personaje: Devolver resultado (Daño causado)
+    Personaje->Personaje: Consumir Maná
+    Sistema->Interfaz: Actualizar barras de estado (HP/MP)
+else sin maná
+    Personaje-->>Interfaz: Error "Maná insuficiente"
+end
+
+note over Sistema, Enemigo: Siguiente en orden de velocidad
+
+Sistema->Enemigo: IA_Comportamiento()
+Enemigo->(3)Personaje: Ataque básico (Mensaje no instantáneo)
+Personaje->Personaje: Calcular daño recibido
+Sistema->Interfaz: Mostrar "Enemigo ha atacado a..."

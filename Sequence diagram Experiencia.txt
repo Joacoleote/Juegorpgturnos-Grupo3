@@ -1,0 +1,26 @@
+title Distribución de Experiencia (Juego RPG)
+
+    participant Interfaz
+    participant Sistema
+    participant Personaje
+    participant Enemigo
+
+    
+    Sistema->>Enemigo: getExperienciaOtorgada()
+    Enemigo-->>Sistema: retorna valor (ej: 100 EXP)
+    
+    
+    loop Para cada Personaje en la Party
+        Sistema->>Personaje: ganarExperiencia(50)
+        Personaje->>Personaje: Sumar EXP interna
+        
+        alt ¿Alcanzó el límite de nivel?
+            Personaje->>Personaje: Incrementar Nivel y Stats
+            Personaje-->>Sistema: retorna mensaje: "¡Subió de Nivel!"
+        else No subió
+            Personaje-->>Sistema: retorna mensaje: "Ganó 50 EXP"
+        end
+    end
+    
+    Sistema->>Interfaz: mostrarResumenBatalla(listaMensajes)
+    Interfaz->>Interfaz: Dibujar pantalla de Resultados
