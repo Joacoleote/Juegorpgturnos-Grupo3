@@ -94,6 +94,7 @@ public class ControladorBatalla {
 
         Entidad actual = ordenTurnos.get(indiceTurno);
         pantallaBatalla.setTurnoActual(actual);
+        pantallaBatalla.actualizarOrdenTurnos(ordenTurnos, indiceTurno);
 
         if (actual instanceof Personaje) {
             personajeActual = (Personaje) actual;

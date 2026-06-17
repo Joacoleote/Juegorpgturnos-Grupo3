@@ -31,6 +31,7 @@ public class PantallaBatalla extends JPanel {
     private JButton btnVolverMenu;
     private JButton btnGuardarBatalla;
     private JPanel panelBotones;
+    private JPanel panelOrdenTurnos;
 
     public PantallaBatalla() {
         setBackground(new Color(20, 18, 38));
@@ -149,6 +150,20 @@ public class PantallaBatalla extends JPanel {
         panelBotones.add(btnHabilidad);
         panelBotones.add(btnItem);
 
+        // Turn order list
+        panelOrdenTurnos = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 3));
+        panelOrdenTurnos.setBackground(new Color(12, 10, 25));
+        JScrollPane scrollOrden = new JScrollPane(panelOrdenTurnos,
+                JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollOrden.setPreferredSize(new Dimension(0, 48));
+        scrollOrden.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(new Color(70, 60, 110), 1),
+                "Orden de Turnos", TitledBorder.LEFT, TitledBorder.TOP,
+                new Font("SansSerif", Font.BOLD, 9), new Color(150, 130, 190)));
+        scrollOrden.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 5));
+
+        panelSouth.add(scrollOrden, BorderLayout.NORTH);
         panelSouth.add(scrollLog, BorderLayout.CENTER);
         panelSouth.add(panelBotones, BorderLayout.SOUTH);
         add(panelSouth, BorderLayout.SOUTH);
@@ -164,8 +179,10 @@ public class PantallaBatalla extends JPanel {
         habilitarAcciones(false);
         panelPartyStatus.removeAll();
         panelEnemyStatus.removeAll();
+        panelOrdenTurnos.removeAll();
         panelPartyStatus.revalidate();
         panelEnemyStatus.revalidate();
+        panelOrdenTurnos.revalidate();
     }
 
     public void setGestorCombate(GestorCombate gestor) {
@@ -328,6 +345,52 @@ public class PantallaBatalla extends JPanel {
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btn.setEnabled(false);
         return btn;
+    }
+
+    public void actualizarOrdenTurnos(List<Entidad> orden, int indiceActual) {
+        panelOrdenTurnos.removeAll();
+        boolean primero = true;
+        for (int i = indiceActual; i < orden.size(); i++) {
+            Entidad e = orden.get(i);
+            if (!e.estaVivo()) continue;
+            if (!primero) {
+                JLabel sep = new JLabel("›");
+                sep.setForeground(new Color(70, 70, 100));
+                sep.setFont(new Font("SansSerif", Font.PLAIN, 14));
+                panelOrdenTurnos.add(sep);
+            }
+            panelOrdenTurnos.add(crearChipTurno(e, i == indiceActual));
+            primero = false;
+        }
+        panelOrdenTurnos.revalidate();
+        panelOrdenTurnos.repaint();
+    }
+
+    private JLabel crearChipTurno(Entidad e, boolean esCurrent) {
+        String texto = esCurrent ? "▶ " + e.getNombre() : e.getNombre();
+        JLabel chip = new JLabel(texto);
+        chip.setFont(new Font("SansSerif", esCurrent ? Font.BOLD : Font.PLAIN, 10));
+        chip.setOpaque(true);
+        if (esCurrent) {
+            chip.setBackground(new Color(55, 45, 10));
+            chip.setForeground(new Color(255, 215, 50));
+            chip.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(new Color(200, 160, 20), 2),
+                    BorderFactory.createEmptyBorder(2, 7, 2, 7)));
+        } else if (e instanceof Personaje) {
+            chip.setBackground(new Color(18, 14, 38));
+            chip.setForeground(new Color(150, 130, 200));
+            chip.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(new Color(50, 40, 85), 1),
+                    BorderFactory.createEmptyBorder(2, 7, 2, 7)));
+        } else {
+            chip.setBackground(new Color(32, 14, 14));
+            chip.setForeground(new Color(195, 120, 120));
+            chip.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(new Color(75, 28, 28), 1),
+                    BorderFactory.createEmptyBorder(2, 7, 2, 7)));
+        }
+        return chip;
     }
 
     public PanelArena getPanelArena() { return panelArena; }
