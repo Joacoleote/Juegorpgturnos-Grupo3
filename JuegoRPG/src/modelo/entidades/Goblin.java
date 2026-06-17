@@ -8,7 +8,7 @@ import java.util.List;
 public class Goblin extends Enemigo {
 
     public Goblin(String nombre) {
-        super(nombre, 55, 14, 6, 14, 1, 40, 10);
+        super(nombre, 70, 22, 5, 14, 1, 40, 10);
     }
 
     @Override

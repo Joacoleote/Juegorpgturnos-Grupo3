@@ -23,9 +23,9 @@ public class LluviaDeFlecha extends Habilidad {
         sb.append(origen.getNombre()).append(" usa Lluvia de Flechas!\n");
         for (Enemigo e : enemigos) {
             if (e.estaVivo()) {
-                int danio = gestor.calcularDanioFisico(origen, e, 0.9f);
-                gestor.infligirDanio(e, danio);
-                sb.append("  ").append(e.getNombre()).append(" recibe ").append(danio).append(" de danio!\n");
+                int daño = gestor.calcularDañoFisico(origen, e, 0.9f);
+                gestor.infligirDaño(e, daño);
+                sb.append("  ").append(e.getNombre()).append(" recibe ").append(daño).append(" de daño!\n");
             }
         }
         return sb.toString().trim();

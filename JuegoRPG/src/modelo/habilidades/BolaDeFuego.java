@@ -23,9 +23,9 @@ public class BolaDeFuego extends Habilidad {
         sb.append(origen.getNombre()).append(" lanza Bola de Fuego!\n");
         for (Enemigo e : enemigos) {
             if (e.estaVivo()) {
-                int danio = gestor.calcularDanioMagico(origen, e, 1.3f);
-                gestor.infligirDanio(e, danio);
-                sb.append("  ").append(e.getNombre()).append(" recibe ").append(danio).append(" de danio!\n");
+                int daño = gestor.calcularDañoMagico(origen, e, 1.3f);
+                gestor.infligirDaño(e, daño);
+                sb.append("  ").append(e.getNombre()).append(" recibe ").append(daño).append(" de daño!\n");
             }
         }
         return sb.toString().trim();

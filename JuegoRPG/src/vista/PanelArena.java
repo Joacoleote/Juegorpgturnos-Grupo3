@@ -6,11 +6,14 @@ import modelo.entidades.*;
 import vista.sprite.GestorSprites;
 import vista.sprite.TipoAnimacion;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
@@ -43,6 +46,9 @@ public class PanelArena extends JPanel {
     private Consumer<Entidad> callbackSeleccion;
 
     private final Map<Entidad, Point> posiciones = new HashMap<Entidad, Point>();
+
+    // ── Background image ──────────────────────────────────────────────────────
+    private final BufferedImage imagenFondo;
 
     // ── Sprite system ─────────────────────────────────────────────────────────
     private final GestorSprites gestorSprites = GestorSprites.getInstancia();
@@ -85,6 +91,12 @@ public class PanelArena extends JPanel {
     public PanelArena() {
         setPreferredSize(new Dimension(700, 300));
         setBackground(new Color(25, 20, 42));
+
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(new File("recursos/fondo.png"));
+        } catch (IOException ignored) {}
+        imagenFondo = img;
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -256,7 +268,7 @@ public class PanelArena extends JPanel {
                     animOffsetY = tDY;
                     mostrarGolpe = true;
                     entidadGolpeada = objetivo;
-                    setAnimacion(objetivo, TipoAnimacion.RECIBE_DANIO, false);
+                    setAnimacion(objetivo, TipoAnimacion.RECIBE_DAÑO, false);
                 } else if (step[0] <= totalSteps) {
                     mostrarGolpe = false;
                     int back = step[0] - 11;
@@ -302,7 +314,7 @@ public class PanelArena extends JPanel {
                     // Hit all visible enemies
                     if (enemigos != null) {
                         for (Enemigo en : enemigos) {
-                            if (en.estaVivo()) setAnimacion(en, TipoAnimacion.RECIBE_DANIO, false);
+                            if (en.estaVivo()) setAnimacion(en, TipoAnimacion.RECIBE_DAÑO, false);
                         }
                     }
                 } else {
@@ -356,20 +368,23 @@ public class PanelArena extends JPanel {
     }
 
     private void dibujarFondo(Graphics2D g2) {
-        GradientPaint gp = new GradientPaint(0, 0, new Color(18, 14, 32), getWidth(), getHeight(), new Color(32, 18, 50));
-        g2.setPaint(gp);
-        g2.fillRect(0, 0, getWidth(), getHeight());
+        if (imagenFondo != null) {
+            g2.drawImage(imagenFondo, 0, 0, getWidth(), getHeight(), null);
+        } else {
+            // Fallback gradient if image not found
+            GradientPaint gp = new GradientPaint(0, 0, new Color(18, 14, 32), getWidth(), getHeight(), new Color(32, 18, 50));
+            g2.setPaint(gp);
+            g2.fillRect(0, 0, getWidth(), getHeight());
+        }
 
-        g2.setColor(new Color(50, 38, 70));
-        g2.fillRect(0, getHeight() - 35, getWidth(), 35);
-
-        g2.setColor(new Color(90, 70, 120, 70));
-        g2.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{6, 6}, 0));
+        // Separator line + VS label
+        g2.setColor(new Color(0, 0, 0, 80));
+        g2.setStroke(new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{8, 6}, 0));
         g2.drawLine(getWidth() / 2, 10, getWidth() / 2, getHeight() - 10);
 
-        g2.setFont(new Font("Serif", Font.BOLD, 16));
-        g2.setColor(new Color(120, 100, 160, 150));
-        g2.drawString("VS", getWidth() / 2 - 10, getHeight() / 2 + 6);
+        g2.setFont(new Font("Serif", Font.BOLD, 18));
+        g2.setColor(new Color(255, 255, 255, 180));
+        g2.drawString("VS", getWidth() / 2 - 11, getHeight() / 2 + 7);
     }
 
     private void dibujarPersonaje(Graphics2D g2, Personaje p, int x, int y, boolean golpeado) {
@@ -493,7 +508,7 @@ public class PanelArena extends JPanel {
     }
 
     private boolean isEnemigo(String clase) {
-        return "Goblin".equals(clase) || "Dragon".equals(clase);
+        return "Goblin".equals(clase) || "Slime".equals(clase);
     }
 
     // ── Fallback rectangle drawing (used when no sprite available) ─────────────
@@ -631,7 +646,7 @@ public class PanelArena extends JPanel {
     private Color colorEnemigo(Enemigo e) {
         String tipo = e.getNombreTipo();
         if ("Goblin".equals(tipo)) return new Color(50, 110, 55);
-        if ("Dragon".equals(tipo)) return new Color(150, 28, 110);
+        if ("Slime".equals(tipo))  return new Color(40, 160, 60);
         return new Color(100, 60, 60);
     }
 

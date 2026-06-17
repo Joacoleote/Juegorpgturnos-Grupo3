@@ -197,7 +197,7 @@ public class PantallaCreacionParty extends JPanel {
                     + "HP: 80 &nbsp; MP: 90<br>"
                     + "ATK: 15 &nbsp; DEF: 8 &nbsp; VEL: 13<br>"
                     + "<i>Habilidades: Bola de Fuego (area), Rayo Helado</i><br>"
-                    + "Poderoso danio magico en area.</html>";
+                    + "Poderoso daño magico en area.</html>";
         } else if ("Arquero".equals(clase)) {
             stats = "<html><b style='color:#66cc66'>ARQUERO</b><br>"
                     + "HP: 95 &nbsp; MP: 50<br>"
@@ -215,7 +215,7 @@ public class PantallaCreacionParty extends JPanel {
                     + "HP: 160 &nbsp; MP: 40<br>"
                     + "ATK: 18 &nbsp; DEF: 20 &nbsp; VEL: 7<br>"
                     + "<i>Habilidades: Defensa Fortificada, Golpe de Escudo</i><br>"
-                    + "Absorbe el danio y protege al equipo.</html>";
+                    + "Absorbe el daño y protege al equipo.</html>";
         }
         lblStats.setText(stats);
     }

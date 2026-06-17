@@ -24,10 +24,9 @@ public abstract class Entidad implements Serializable {
         this.enDefensa = false;
     }
 
-    public void recibirDanio(int cantidad) {
-        int reduccion = enDefensa ? defensa : defensa / 2;
-        int danioFinal = Math.max(1, cantidad - reduccion);
-        vidaActual = Math.max(0, vidaActual - danioFinal);
+    public void recibirDaño(int cantidad) {
+        // La reduccion por defensa ya fue calculada en GestorCombate.calcularDañoFisico/Magico
+        vidaActual = Math.max(0, vidaActual - Math.max(1, cantidad));
     }
 
     public void curar(int cantidad) {

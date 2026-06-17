@@ -5,69 +5,47 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Singleton. Loads both sprite sheets and exposes frames per class + animation type.
+ * Singleton. Loads "nuevos sprites.png" and exposes frames per class + animation type.
  *
- * ============ HEROES.PNG LAYOUT (2048x2048) ============
- * 3-column × 2-row grid.  Each character cell = 683 × 1024 px.
+ * ======= nuevos sprites.png (1024 x 1536, transparent background) =======
  *
- *  Top row  (y=0):    Mago (col 0) | Tanque (col 1) | Guerrero (col 2)
- *  Bottom row (y=1024): Arquera (col 0) | Orco (col 1) | Slime (col 2)
+ * Each hero occupies TWO horizontal rows:
+ *   Row A (yA, hA) → IDLE animation  (5 frames in left section x=0..499)
+ *   Row B (yB, hB) → ATAQUE animation (5 frames in left section x=0..499)
+ *                     + RECIBE frame at x≈540, MUERTE frame at x≈920
  *
- *  Frame size: H_FRAME_W × H_FRAME_H  (adjust if sprites are clipped)
- *  Top chars have 5 animation rows; bottom chars have 6 (includes Walk/Jump).
- *
- * ============ CURANDERO.JPEG LAYOUT (1254x1254) ============
- *  Left panel (showcase): x=0..C_X_START
- *  Right grid: 3 frames per row, 6 animation rows stacked vertically.
- *  Frame size: C_FRAME_W × C_FRAME_H
+ * Characters in order (top to bottom):
+ *   Curandero (white/gold mage)  yA=20,  yB=130
+ *   Mago      (blue mage)        yA=257, yB=363
+ *   Tanque    (green armor)      yA=467, yB=572
+ *   Guerrero  (red warrior)      yA=678, yB=786
+ *   Arquero   (camo archer)      yA=895, yB=1005
+ *   Goblin    (enemy, 1 row)     yA=1117
  */
 public class GestorSprites {
 
     private static GestorSprites instancia;
 
-    // ─── heroes.png config ────────────────────────────────────────────────────
-    private static final int H_FRAME_W     = 170;
-    private static final int H_FRAME_H_TOP = 130; // covers char body after label skip (~122px max)
-    private static final int H_FRAME_H_BOT = 125; // covers tallest bottom-row block (123px)
+    // Left section: 5 frames of 100px each (occupies x=0..499 of the 1024px sheet)
+    private static final int N_FW        = 100;  // frame width
+    private static final int N_FX_RECIBE = 540;  // x-start of "receive hit" frame (right section)
+    private static final int N_FX_MUERTE = 920;  // x-start of "death / fallen" frame (right section)
 
-    // Column X-starts
-    private static final int H_COL_0 = 0;
-    private static final int H_COL_1 = 683;
-    private static final int H_COL_2 = 1366;
+    // [yA, hA, yB, hB] for each hero
+    private static final int[] R_CURANDERO = { 20,  94, 130, 106};
+    private static final int[] R_MAGO      = {257,  87, 363,  81};
+    private static final int[] R_TANQUE    = {467,  89, 572,  87};
+    private static final int[] R_GUERRERO  = {678,  87, 786,  89};
+    private static final int[] R_ARQUERO   = {895,  88,1005,  78};
 
-    // Section Y-starts
-    private static final int H_Y_TOP = 0;
-    private static final int H_Y_BOT = 1024;
+    // Goblin: single row (right section contains slime sprites, not goblin)
+    private static final int N_GOBLIN_Y = 1117;
+    private static final int N_GOBLIN_H =   83;
 
-    // Animation row offsets relative to section start — TOP chars
-    // Each block has a text label ("IDLE", "HEAL") in the first ~33px; we skip it.
-    private static final int H_T_IDLE   = 101; // block y=68, skip "IDLE" label → char at y=101
-    private static final int H_T_ATAQ   = 269; // block y=269..390, no label
-    private static final int H_T_RECIBE = 455; // block y=455..573, no label
-    private static final int H_T_CURAR  = 637; // block y=604, skip "HEAL" label → char at y=637
-    private static final int H_T_MUERTE = 836; // block y=836..947, no label
-
-    // Animation row offsets — BOTTOM chars (row 1=WALK skipped)
-    // Measured from absolute y, stored relative to H_Y_BOT=1024
-    private static final int H_B_IDLE   =  93; // abs y=1117 (was 75)
-    private static final int H_B_ATAQ   = 266; // abs y=1290 (was 225)
-    private static final int H_B_RECIBE = 441; // abs y=1465 (was 300)
-    private static final int H_B_CURAR  = 621; // abs y=1645 (was 375)
-    private static final int H_B_MUERTE = 770; // abs y=1794 (was 450)
-
-    // ─── curandero.jpeg config ─────────────────────────────────────────────────
-    // Image is 1254×1254, 3 frames per row (cols), 6 animation rows.
-    // Left panel showcase: x=0..C_X_START. Grid starts at C_X_START.
-    private static final int C_X_START  = 310;
-    private static final int C_FRAME_W  = 290;
-    private static final int C_FRAME_H  = 180; // capped so last row fits: 1068+180=1248 ≤ 1254
-
-    // Row Y-starts measured from actual 1254×1254 image (proportional to original 2048px sheet)
-    private static final int C_Y_IDLE   =  26;  // row 0
-    private static final int C_Y_ATAQ   = 430;  // row 2 (row 1 is WALK, skipped)
-    private static final int C_Y_CURAR  = 635;  // row 3
-    private static final int C_Y_RECIBE = 870;  // row 4
-    private static final int C_Y_MUERTE = 1068; // row 5
+    // Slime: row below goblin — left 3 frames = alive, frame at x=300 = flattened/dead
+    private static final int N_SLIME_Y       = 1235;
+    private static final int N_SLIME_H       =   74;
+    private static final int N_SLIME_MUERTE_X = 300;
 
     // ─────────────────────────────────────────────────────────────────────────
 
@@ -83,50 +61,37 @@ public class GestorSprites {
     }
 
     private void cargar() {
-        SpriteHoja heroes    = new SpriteHoja("recursos/heroes.png",    H_FRAME_W, H_FRAME_H_TOP);
-        SpriteHoja curandero = new SpriteHoja("recursos/curandero.jpeg", C_FRAME_W, C_FRAME_H);
+        SpriteHoja hoja = new SpriteHoja("recursos/nuevos sprites.png", N_FW, 100);
+        if (!hoja.estaCargada()) return;
 
-        if (heroes.estaCargada()) {
-            // ── Top row characters (5 animation rows) ──
-            registrarTop(heroes, "Mago",     H_COL_0, H_Y_TOP, 3, 4, 4, 4, 4);
-            registrarTop(heroes, "Tanque",   H_COL_1, H_Y_TOP, 4, 4, 4, 4, 4);
-            registrarTop(heroes, "Guerrero", H_COL_2, H_Y_TOP, 4, 4, 4, 4, 4);
+        registrar(hoja, "Curandero", R_CURANDERO);
+        registrar(hoja, "Mago",      R_MAGO);
+        registrar(hoja, "Tanque",    R_TANQUE);
+        registrar(hoja, "Guerrero",  R_GUERRERO);
+        registrar(hoja, "Arquero",   R_ARQUERO);
 
-            // ── Bottom row characters (row 1=WALK skipped) ──
-            registrarBot(heroes, "Arquero", H_COL_0, H_Y_BOT, 4, 4, 4, 4, 4);
-            registrarBot(heroes, "Goblin",  H_COL_1, H_Y_BOT, 4, 4, 4, 4, 4);
-        }
+        // Goblin: left section only (right section has slime sprites)
+        Map<TipoAnimacion, BufferedImage[]> g = new HashMap<>();
+        g.put(TipoAnimacion.IDLE,   hoja.extraerFila(0, N_GOBLIN_Y, N_GOBLIN_H, 3));
+        g.put(TipoAnimacion.ATAQUE, hoja.extraerFila(0, N_GOBLIN_Y, N_GOBLIN_H, 3));
+        datos.put("Goblin", g);
 
-        if (curandero.estaCargada()) {
-            Map<TipoAnimacion, BufferedImage[]> c = new HashMap<>();
-            c.put(TipoAnimacion.IDLE,         curandero.extraerFila(C_X_START, C_Y_IDLE,   3));
-            c.put(TipoAnimacion.ATAQUE,       curandero.extraerFila(C_X_START, C_Y_ATAQ,   3));
-            c.put(TipoAnimacion.RECIBE_DANIO, curandero.extraerFila(C_X_START, C_Y_RECIBE, 3));
-            c.put(TipoAnimacion.CURAR,        curandero.extraerFila(C_X_START, C_Y_CURAR,  3));
-            c.put(TipoAnimacion.MUERTE,       curandero.extraerFila(C_X_START, C_Y_MUERTE, 3));
-            datos.put("Curandero", c);
-        }
+        // Slime: first 3 frames = alive/bouncing, frame at x=300 = flattened (death)
+        Map<TipoAnimacion, BufferedImage[]> s = new HashMap<>();
+        s.put(TipoAnimacion.IDLE,   hoja.extraerFila(0,              N_SLIME_Y, N_SLIME_H, 3));
+        s.put(TipoAnimacion.ATAQUE, hoja.extraerFila(0,              N_SLIME_Y, N_SLIME_H, 3));
+        s.put(TipoAnimacion.MUERTE, hoja.extraerFila(N_SLIME_MUERTE_X, N_SLIME_Y, N_SLIME_H, 1));
+        datos.put("Slime", s);
     }
 
-    private void registrarTop(SpriteHoja h, String clase, int colX, int secY,
-            int nIdle, int nAtaq, int nRecibe, int nCurar, int nMuerte) {
+    private void registrar(SpriteHoja h, String clase, int[] r) {
+        int yA = r[0], hA = r[1], yB = r[2], hB = r[3];
         Map<TipoAnimacion, BufferedImage[]> m = new HashMap<>();
-        m.put(TipoAnimacion.IDLE,        h.extraerFila(colX, secY + H_T_IDLE,   nIdle));
-        m.put(TipoAnimacion.ATAQUE,      h.extraerFila(colX, secY + H_T_ATAQ,   nAtaq));
-        m.put(TipoAnimacion.RECIBE_DANIO, h.extraerFila(colX, secY + H_T_RECIBE, nRecibe));
-        m.put(TipoAnimacion.CURAR,       h.extraerFila(colX, secY + H_T_CURAR,  nCurar));
-        m.put(TipoAnimacion.MUERTE,      h.extraerFila(colX, secY + H_T_MUERTE, nMuerte));
-        datos.put(clase, m);
-    }
-
-    private void registrarBot(SpriteHoja h, String clase, int colX, int secY,
-            int nIdle, int nAtaq, int nRecibe, int nCurar, int nMuerte) {
-        Map<TipoAnimacion, BufferedImage[]> m = new HashMap<>();
-        m.put(TipoAnimacion.IDLE,        h.extraerFila(colX, secY + H_B_IDLE,   H_FRAME_H_BOT, nIdle));
-        m.put(TipoAnimacion.ATAQUE,      h.extraerFila(colX, secY + H_B_ATAQ,   H_FRAME_H_BOT, nAtaq));
-        m.put(TipoAnimacion.RECIBE_DANIO, h.extraerFila(colX, secY + H_B_RECIBE, H_FRAME_H_BOT, nRecibe));
-        m.put(TipoAnimacion.CURAR,       h.extraerFila(colX, secY + H_B_CURAR,  H_FRAME_H_BOT, nCurar));
-        m.put(TipoAnimacion.MUERTE,      h.extraerFila(colX, secY + H_B_MUERTE, H_FRAME_H_BOT, nMuerte));
+        m.put(TipoAnimacion.IDLE,         h.extraerFila(0,           yA, hA, 5));
+        m.put(TipoAnimacion.ATAQUE,       h.extraerFila(0,           yB, hB, 5));
+        m.put(TipoAnimacion.RECIBE_DAÑO, h.extraerFila(N_FX_RECIBE, yB, hB, 1));
+        m.put(TipoAnimacion.CURAR,        h.extraerFila(0,           yA, hA, 1));
+        m.put(TipoAnimacion.MUERTE,       h.extraerFila(N_FX_MUERTE, yB, hB, 1));
         datos.put(clase, m);
     }
 
@@ -145,9 +110,7 @@ public class GestorSprites {
 
     private static boolean hayFramesValidos(BufferedImage[] frames) {
         if (frames == null) return false;
-        for (BufferedImage f : frames) {
-            if (f != null) return true;
-        }
+        for (BufferedImage f : frames) { if (f != null) return true; }
         return false;
     }
 

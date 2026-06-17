@@ -15,9 +15,9 @@ public class DisparoCritico extends Habilidad {
 
     @Override
     public String ejecutar(Entidad origen, Entidad objetivo, GestorCombate gestor) {
-        int danio = gestor.calcularDanioSinDefensa(origen, 2.0f);
-        gestor.infligirDanio(objetivo, danio);
+        int daño = gestor.calcularDañoSinDefensa(origen, 2.0f);
+        gestor.infligirDaño(objetivo, daño);
         return origen.getNombre() + " usa Disparo Critico sobre " + objetivo.getNombre()
-                + " causando " + danio + " de danio (ignora defensa)!";
+                + " causando " + daño + " de daño (ignora defensa)!";
     }
 }

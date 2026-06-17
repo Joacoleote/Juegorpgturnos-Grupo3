@@ -15,9 +15,9 @@ public class GolpeFuerte extends Habilidad {
 
     @Override
     public String ejecutar(Entidad origen, Entidad objetivo, GestorCombate gestor) {
-        int danio = gestor.calcularDanioFisico(origen, objetivo, 1.8f);
-        gestor.infligirDanio(objetivo, danio);
+        int daño = gestor.calcularDañoFisico(origen, objetivo, 1.8f);
+        gestor.infligirDaño(objetivo, daño);
         return origen.getNombre() + " usa Golpe Fuerte sobre " + objetivo.getNombre()
-                + " causando " + danio + " de danio!";
+                + " causando " + daño + " de daño!";
     }
 }
