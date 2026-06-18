@@ -12,7 +12,8 @@ import java.util.Map;
  * Each character occupies TWO horizontal rows:
  *   Row A (yA, hA) → IDLE animation  (5 frames × 106 px, x = 0..529)
  *   Row B (yB, hB) → ATAQUE animation (5 frames × 106 px, x = 0..529)
- *                     + right section (53 px frames): RECIBE @ x=530, MUERTE @ x=742
+ *                     + right section: RECIBE @ x=530 (106 px), stagger @ x=636 (106 px),
+ *                       dying @ x=742 (53 px), dead/lying @ x=795 (53 px = MUERTE)
  *
  * Characters top-to-bottom:
  *   Curandero  yA=22,   hA=72,  yB=125,  hB=70
@@ -32,7 +33,7 @@ public class GestorSprites {
     // Right section: special frames of 53 px each
     private static final int N_FW_RIGHT  = 53;
     private static final int N_FX_RECIBE = 530;
-    private static final int N_FX_MUERTE = 742;
+    private static final int N_FX_MUERTE = 795;
 
     // [yA, hA, yB, hB]
     private static final int[] R_CURANDERO = { 22, 72, 125, 70};
