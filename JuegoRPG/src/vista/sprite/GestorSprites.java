@@ -7,45 +7,41 @@ import java.util.Map;
 /**
  * Singleton. Loads "nuevos sprites.png" and exposes frames per class + animation type.
  *
- * ======= nuevos sprites.png (1024 x 1536, transparent background) =======
+ * ======= nuevos sprites.png (848 x 1264, transparent background) =======
  *
- * Each hero occupies TWO horizontal rows:
- *   Row A (yA, hA) → IDLE animation  (5 frames in left section x=0..499)
- *   Row B (yB, hB) → ATAQUE animation (5 frames in left section x=0..499)
- *                     + RECIBE frame at x≈540, MUERTE frame at x≈920
+ * Each character occupies TWO horizontal rows:
+ *   Row A (yA, hA) → IDLE animation  (5 frames × 106 px, x = 0..529)
+ *   Row B (yB, hB) → ATAQUE animation (5 frames × 106 px, x = 0..529)
+ *                     + right section (53 px frames): RECIBE @ x=530, MUERTE @ x=742
  *
- * Characters in order (top to bottom):
- *   Curandero (white/gold mage)  yA=20,  yB=130
- *   Mago      (blue mage)        yA=257, yB=363
- *   Tanque    (green armor)      yA=467, yB=572
- *   Guerrero  (red warrior)      yA=678, yB=786
- *   Arquero   (camo archer)      yA=895, yB=1005
- *   Goblin    (enemy, 1 row)     yA=1117
+ * Characters top-to-bottom:
+ *   Curandero  yA=22,   hA=72,  yB=125,  hB=70
+ *   Mago       yA=217,  hA=65,  yB=300,  hB=64
+ *   Tanque     yA=386,  hA=70,  yB=472,  hB=69
+ *   Guerrero   yA=562,  hA=67,  yB=650,  hB=67
+ *   Arquero    yA=742,  hA=66,  yB=826,  hB=66
+ *   Goblin     yA=920,  hA=68,  yB=1007, hB=69
+ *   Slime      yA=1112, hA=52,  yB=1205, hB=51
  */
 public class GestorSprites {
 
     private static GestorSprites instancia;
 
-    // Left section: 5 frames of 100px each (occupies x=0..499 of the 1024px sheet)
-    private static final int N_FW        = 100;  // frame width
-    private static final int N_FX_RECIBE = 540;  // x-start of "receive hit" frame (right section)
-    private static final int N_FX_MUERTE = 920;  // x-start of "death / fallen" frame (right section)
+    // Left section: 5 animation frames of 106 px each (x = 0..529)
+    private static final int N_FW        = 106;
+    // Right section: special frames of 53 px each
+    private static final int N_FW_RIGHT  = 53;
+    private static final int N_FX_RECIBE = 530;
+    private static final int N_FX_MUERTE = 742;
 
-    // [yA, hA, yB, hB] for each hero
-    private static final int[] R_CURANDERO = { 20,  94, 130, 106};
-    private static final int[] R_MAGO      = {257,  87, 363,  81};
-    private static final int[] R_TANQUE    = {467,  89, 572,  87};
-    private static final int[] R_GUERRERO  = {678,  87, 786,  89};
-    private static final int[] R_ARQUERO   = {895,  88,1005,  78};
-
-    // Goblin: single row (right section contains slime sprites, not goblin)
-    private static final int N_GOBLIN_Y = 1117;
-    private static final int N_GOBLIN_H =   83;
-
-    // Slime: row below goblin — left 3 frames = alive, frame at x=300 = flattened/dead
-    private static final int N_SLIME_Y       = 1235;
-    private static final int N_SLIME_H       =   74;
-    private static final int N_SLIME_MUERTE_X = 300;
+    // [yA, hA, yB, hB]
+    private static final int[] R_CURANDERO = { 22, 72, 125, 70};
+    private static final int[] R_MAGO      = {217, 65, 300, 64};
+    private static final int[] R_TANQUE    = {386, 70, 472, 69};
+    private static final int[] R_GUERRERO  = {562, 67, 650, 67};
+    private static final int[] R_ARQUERO   = {742, 66, 826, 66};
+    private static final int[] R_GOBLIN    = {920, 68,1007, 69};
+    private static final int[] R_SLIME     = {1112,52,1205, 51};
 
     // ─────────────────────────────────────────────────────────────────────────
 
@@ -61,37 +57,36 @@ public class GestorSprites {
     }
 
     private void cargar() {
-        SpriteHoja hoja = new SpriteHoja("recursos/nuevos sprites.png", N_FW, 100);
+        SpriteHoja hoja      = new SpriteHoja("recursos/nuevos sprites.png", N_FW,       100);
+        SpriteHoja hojaRight = new SpriteHoja("recursos/nuevos sprites.png", N_FW_RIGHT, 100);
         if (!hoja.estaCargada()) return;
 
-        registrar(hoja, "Curandero", R_CURANDERO);
-        registrar(hoja, "Mago",      R_MAGO);
-        registrar(hoja, "Tanque",    R_TANQUE);
-        registrar(hoja, "Guerrero",  R_GUERRERO);
-        registrar(hoja, "Arquero",   R_ARQUERO);
+        registrar(hoja, hojaRight, "Curandero", R_CURANDERO);
+        registrar(hoja, hojaRight, "Mago",      R_MAGO);
+        registrar(hoja, hojaRight, "Tanque",    R_TANQUE);
+        registrar(hoja, hojaRight, "Guerrero",  R_GUERRERO);
+        registrar(hoja, hojaRight, "Arquero",   R_ARQUERO);
+        registrar(hoja, hojaRight, "Goblin",    R_GOBLIN);
 
-        // Goblin: left section only (right section has slime sprites)
-        Map<TipoAnimacion, BufferedImage[]> g = new HashMap<>();
-        g.put(TipoAnimacion.IDLE,   hoja.extraerFila(0, N_GOBLIN_Y, N_GOBLIN_H, 3));
-        g.put(TipoAnimacion.ATAQUE, hoja.extraerFila(0, N_GOBLIN_Y, N_GOBLIN_H, 3));
-        datos.put("Goblin", g);
-
-        // Slime: first 3 frames = alive/bouncing, frame at x=300 = flattened (death)
+        // Slime: 3 alive frames for idle/attack; specials from right section of row A
+        int sYA = R_SLIME[0], sHA = R_SLIME[1], sYB = R_SLIME[2], sHB = R_SLIME[3];
         Map<TipoAnimacion, BufferedImage[]> s = new HashMap<>();
-        s.put(TipoAnimacion.IDLE,   hoja.extraerFila(0,              N_SLIME_Y, N_SLIME_H, 3));
-        s.put(TipoAnimacion.ATAQUE, hoja.extraerFila(0,              N_SLIME_Y, N_SLIME_H, 3));
-        s.put(TipoAnimacion.MUERTE, hoja.extraerFila(N_SLIME_MUERTE_X, N_SLIME_Y, N_SLIME_H, 1));
+        s.put(TipoAnimacion.IDLE,        hoja.extraerFila(0,            sYA, sHA, 3));
+        s.put(TipoAnimacion.ATAQUE,      hoja.extraerFila(0,            sYB, sHB, 3));
+        s.put(TipoAnimacion.CURAR,       hoja.extraerFila(0,            sYA, sHA, 1));
+        s.put(TipoAnimacion.RECIBE_DAÑO, hojaRight.extraerFila(N_FX_RECIBE, sYA, sHA, 1));
+        s.put(TipoAnimacion.MUERTE,      hojaRight.extraerFila(N_FX_MUERTE, sYA, sHA, 1));
         datos.put("Slime", s);
     }
 
-    private void registrar(SpriteHoja h, String clase, int[] r) {
+    private void registrar(SpriteHoja h, SpriteHoja hRight, String clase, int[] r) {
         int yA = r[0], hA = r[1], yB = r[2], hB = r[3];
         Map<TipoAnimacion, BufferedImage[]> m = new HashMap<>();
-        m.put(TipoAnimacion.IDLE,         h.extraerFila(0,           yA, hA, 5));
-        m.put(TipoAnimacion.ATAQUE,       h.extraerFila(0,           yB, hB, 5));
-        m.put(TipoAnimacion.RECIBE_DAÑO, h.extraerFila(N_FX_RECIBE, yB, hB, 1));
-        m.put(TipoAnimacion.CURAR,        h.extraerFila(0,           yA, hA, 1));
-        m.put(TipoAnimacion.MUERTE,       h.extraerFila(N_FX_MUERTE, yB, hB, 1));
+        m.put(TipoAnimacion.IDLE,        h.extraerFila(0,            yA, hA, 5));
+        m.put(TipoAnimacion.ATAQUE,      h.extraerFila(0,            yB, hB, 5));
+        m.put(TipoAnimacion.RECIBE_DAÑO, hRight.extraerFila(N_FX_RECIBE, yB, hB, 1));
+        m.put(TipoAnimacion.CURAR,       h.extraerFila(0,            yA, hA, 1));
+        m.put(TipoAnimacion.MUERTE,      hRight.extraerFila(N_FX_MUERTE, yB, hB, 1));
         datos.put(clase, m);
     }
 
