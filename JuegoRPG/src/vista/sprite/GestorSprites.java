@@ -74,7 +74,7 @@ public class GestorSprites {
         s.put(TipoAnimacion.IDLE,        hoja.extraerFila(0,            sYA, sHA, 3));
         s.put(TipoAnimacion.ATAQUE,      hoja.extraerFila(0,            sYB, sHB, 3));
         s.put(TipoAnimacion.CURAR,       hoja.extraerFila(0,            sYA, sHA, 1));
-        s.put(TipoAnimacion.RECIBE_DAÑO, hojaRight.extraerFila(N_FX_RECIBE, sYA, sHA, 1));
+        s.put(TipoAnimacion.RECIBE_DAÑO, hoja.extraerFila(N_FX_RECIBE, sYA, sHA, 1));
         s.put(TipoAnimacion.MUERTE,      hojaRight.extraerFila(N_FX_MUERTE, sYA, sHA, 1));
         datos.put("Slime", s);
     }
@@ -84,9 +84,9 @@ public class GestorSprites {
         Map<TipoAnimacion, BufferedImage[]> m = new HashMap<>();
         m.put(TipoAnimacion.IDLE,        h.extraerFila(0,            yA, hA, 5));
         m.put(TipoAnimacion.ATAQUE,      h.extraerFila(0,            yB, hB, 5));
-        m.put(TipoAnimacion.RECIBE_DAÑO, hRight.extraerFila(N_FX_RECIBE, yB, hB, 1));
+        m.put(TipoAnimacion.RECIBE_DAÑO, h.extraerFila(N_FX_RECIBE, yB, hB, 1));  // RECIBE is 106px wide
         m.put(TipoAnimacion.CURAR,       h.extraerFila(0,            yA, hA, 1));
-        m.put(TipoAnimacion.MUERTE,      hRight.extraerFila(N_FX_MUERTE, yB, hB, 1));
+        m.put(TipoAnimacion.MUERTE,      hRight.extraerFila(N_FX_MUERTE, yB, hB, 1));  // MUERTE is 53px wide
         datos.put(clase, m);
     }
 
