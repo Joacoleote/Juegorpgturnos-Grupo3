@@ -1,4 +1,4 @@
-package vista;
+﻿package vista;
 
 import modelo.Party;
 import modelo.entidades.*;
@@ -273,8 +273,7 @@ public class PantallaCreacionParty extends JPanel {
     public JButton getBtnIniciar() { return btnIniciar; }
     public JButton getBtnVolver() { return btnVolver; }
 
-    // ── Preview estático del sprite de la clase seleccionada (frame 0) ─────
-    private static class PanelSpritePreview extends JPanel {
+private static class PanelSpritePreview extends JPanel {
 
         private String clase = "Guerrero";
 
@@ -303,8 +302,7 @@ public class PantallaCreacionParty extends JPanel {
             int x = (getWidth() - SPR) / 2;
             int y = (getHeight() - SPR) / 2;
 
-            // halo de color según clase
-            g2.setColor(colorClase(clase, 80));
+g2.setColor(colorClase(clase, 80));
             g2.fillOval(x - 6, y + SPR / 2, SPR + 12, SPR / 2 + 4);
 
             g2.drawImage(frames[0], x, y, SPR, SPR, null);

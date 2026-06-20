@@ -1,4 +1,4 @@
-package vista;
+﻿package vista;
 
 import modelo.GestorCombate;
 import modelo.Party;
@@ -25,38 +25,32 @@ public class PanelArena extends JPanel {
     private static final int HERO_X  = 60;
     private static final int ENEMY_X = 530;
 
-    // Drawn sprite size on screen
-    private static final int SPR_W = 80;
+private static final int SPR_W = 80;
     private static final int SPR_H = 96;
 
     private GestorCombate gestorCombate;
     private Party party;
     private List<Enemigo> enemigos;
 
-    // Movement animation
-    private Entidad entidadAnimada;
+private Entidad entidadAnimada;
     private int animOffsetX;
     private int animOffsetY;
     private Entidad entidadGolpeada;
     private boolean mostrarGolpe;
 
-    // Selection mode
-    private boolean modoSeleccionEnemigo;
+private boolean modoSeleccionEnemigo;
     private boolean modoSeleccionAliado;
     private Consumer<Entidad> callbackSeleccion;
 
     private final Map<Entidad, Point> posiciones = new HashMap<Entidad, Point>();
 
-    // ── Background image ──────────────────────────────────────────────────────
-    private final BufferedImage imagenFondo;
+private final BufferedImage imagenFondo;
 
-    // ── Sprite system ─────────────────────────────────────────────────────────
-    private final GestorSprites gestorSprites = GestorSprites.getInstancia();
+private final GestorSprites gestorSprites = GestorSprites.getInstancia();
     private final Map<Entidad, EstadoAnim> estadosAnim = new HashMap<Entidad, EstadoAnim>();
     private final javax.swing.Timer frameTimer;
 
-    /** Per-entity animation state. */
-    private static class EstadoAnim {
+private static class EstadoAnim {
         TipoAnimacion tipo = TipoAnimacion.IDLE;
         int frame = 0;
         boolean bucle = true;
@@ -86,9 +80,8 @@ public class PanelArena extends JPanel {
             return Math.min(frame, Math.max(0, numFrames - 1));
         }
     }
-    // ─────────────────────────────────────────────────────────────────────────
 
-    public PanelArena() {
+public PanelArena() {
         setPreferredSize(new Dimension(700, 300));
         setBackground(new Color(25, 20, 42));
 
@@ -105,8 +98,7 @@ public class PanelArena extends JPanel {
             }
         });
 
-        // 8fps frame animation timer
-        frameTimer = new javax.swing.Timer(125, new ActionListener() {
+frameTimer = new javax.swing.Timer(125, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 avanzarFrames();
@@ -116,9 +108,7 @@ public class PanelArena extends JPanel {
         frameTimer.start();
     }
 
-    // ── Sprite animation helpers ───────────────────────────────────────────────
-
-    private EstadoAnim getEstado(Entidad entidad) {
+private EstadoAnim getEstado(Entidad entidad) {
         if (!estadosAnim.containsKey(entidad)) {
             estadosAnim.put(entidad, new EstadoAnim());
         }
@@ -146,18 +136,15 @@ public class PanelArena extends JPanel {
     private void avanzarEntidad(Entidad entidad, String clase) {
         EstadoAnim estado = getEstado(entidad);
 
-        // Force MUERTE for dead entities
-        if (!entidad.estaVivo() && estado.tipo != TipoAnimacion.MUERTE) {
+if (!entidad.estaVivo() && estado.tipo != TipoAnimacion.MUERTE) {
             estado.setAnimacion(TipoAnimacion.MUERTE, false);
         }
 
-        // Auto-return to IDLE when a non-looping anim (except MUERTE) finishes
-        if (estado.terminado && estado.tipo != TipoAnimacion.MUERTE) {
+if (estado.terminado && estado.tipo != TipoAnimacion.MUERTE) {
             estado.setAnimacion(TipoAnimacion.IDLE, true);
         }
 
-        // IDLE stays static (frame 0) — only advance during actions
-        if (estado.tipo == TipoAnimacion.IDLE) return;
+if (estado.tipo == TipoAnimacion.IDLE) return;
 
         if (gestorSprites.tieneSprites(clase)) {
             BufferedImage[] frames = gestorSprites.getFrames(clase, estado.tipo);
@@ -174,9 +161,7 @@ public class PanelArena extends JPanel {
         return e.getNombreTipo();
     }
 
-    // ── Public API ────────────────────────────────────────────────────────────
-
-    public void setGestorCombate(GestorCombate gestor) {
+public void setGestorCombate(GestorCombate gestor) {
         this.gestorCombate = gestor;
         this.party = gestor.getParty();
         this.enemigos = gestor.getEnemigos();
@@ -311,7 +296,7 @@ public class PanelArena extends JPanel {
                     mostrarGolpe = true;
                     entidadGolpeada = null;
                     animOffsetX = 0;
-                    // Hit all visible enemies
+                    
                     if (enemigos != null) {
                         for (Enemigo en : enemigos) {
                             if (en.estaVivo()) setAnimacion(en, TipoAnimacion.RECIBE_DAÑO, false);
@@ -331,9 +316,7 @@ public class PanelArena extends JPanel {
         timer.start();
     }
 
-    // ── Rendering ─────────────────────────────────────────────────────────────
-
-    @Override
+@Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         recalcularPosiciones();
@@ -371,14 +354,13 @@ public class PanelArena extends JPanel {
         if (imagenFondo != null) {
             g2.drawImage(imagenFondo, 0, 0, getWidth(), getHeight(), null);
         } else {
-            // Fallback gradient if image not found
+            
             GradientPaint gp = new GradientPaint(0, 0, new Color(18, 14, 32), getWidth(), getHeight(), new Color(32, 18, 50));
             g2.setPaint(gp);
             g2.fillRect(0, 0, getWidth(), getHeight());
         }
 
-        // Separator line + VS label
-        g2.setColor(new Color(0, 0, 0, 80));
+g2.setColor(new Color(0, 0, 0, 80));
         g2.setStroke(new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{8, 6}, 0));
         g2.drawLine(getWidth() / 2, 10, getWidth() / 2, getHeight() - 10);
 
@@ -410,8 +392,7 @@ public class PanelArena extends JPanel {
             dibujarRectanguloPersonaje(g2, p, x, y, golpeado);
         }
 
-        // Name + bars (always shown)
-        g2.setFont(new Font("SansSerif", Font.PLAIN, 10));
+g2.setFont(new Font("SansSerif", Font.PLAIN, 10));
         g2.setColor(new Color(220, 220, 255));
         String nombre = cortar(p.getNombre(), 9);
         FontMetrics fm = g2.getFontMetrics();
@@ -462,11 +443,7 @@ public class PanelArena extends JPanel {
                 e.getVidaActual(), e.getVidaMaxima(), new Color(220, 60, 60), new Color(120, 20, 20));
     }
 
-    /**
-     * Draws a sprite from the sheet. Heroes face right, enemies face left (flipped).
-     * Falls back to rectangle if the frame is null.
-     */
-    private void dibujarSprite(Graphics2D g2, String clase, TipoAnimacion animTipo,
+private void dibujarSprite(Graphics2D g2, String clase, TipoAnimacion animTipo,
                                 EstadoAnim estado, int x, int y,
                                 boolean golpeado, boolean enDefensa) {
         BufferedImage[] frames = gestorSprites.getFrames(clase, animTipo);
@@ -476,20 +453,19 @@ public class PanelArena extends JPanel {
         }
         if (frame == null) return;
 
-        // Center the sprite on the character box position
-        int sx = x - (SPR_W - BOX_W) / 2;
+int sx = x - (SPR_W - BOX_W) / 2;
         int sy = y - (SPR_H - BOX_H) / 2;
 
         boolean esEnemigo = isEnemigo(clase);
 
         if (golpeado) {
-            // Flash white on hit
+            
             g2.setColor(new Color(255, 255, 255, 120));
             g2.fillRoundRect(sx, sy, SPR_W, SPR_H, 8, 8);
         }
 
         if (esEnemigo) {
-            // Mirror horizontally so enemy faces left
+            
             AffineTransform at = AffineTransform.getTranslateInstance(sx + SPR_W, sy);
             at.scale(-1, 1);
             at.scale((double) SPR_W / frame.getWidth(), (double) SPR_H / frame.getHeight());
@@ -511,9 +487,7 @@ public class PanelArena extends JPanel {
         return "Goblin".equals(clase) || "Slime".equals(clase);
     }
 
-    // ── Fallback rectangle drawing (used when no sprite available) ─────────────
-
-    private void dibujarRectanguloMuerto(Graphics2D g2, int x, int y, String etiqueta) {
+private void dibujarRectanguloMuerto(Graphics2D g2, int x, int y, String etiqueta) {
         g2.setColor(new Color(70, 70, 70, 180));
         g2.fillRoundRect(x, y + BOX_H / 2, BOX_W, BOX_H / 2, 10, 10);
         g2.setFont(new Font("SansSerif", Font.BOLD, 9));
@@ -583,9 +557,7 @@ public class PanelArena extends JPanel {
         }
     }
 
-    // ── Utilities ─────────────────────────────────────────────────────────────
-
-    private void manejarClick(int mx, int my) {
+private void manejarClick(int mx, int my) {
         if (callbackSeleccion == null) return;
         if (modoSeleccionEnemigo) {
             for (Enemigo e : enemigos) {

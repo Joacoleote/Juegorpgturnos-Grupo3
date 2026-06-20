@@ -1,4 +1,4 @@
-package controlador;
+﻿package controlador;
 
 import modelo.*;
 import modelo.entidades.*;
@@ -59,8 +59,7 @@ public class ControladorJuego {
 
         ventana.add(contenedor);
 
-        // Create battle controller (wires buttons internally)
-        controladorBatalla = new ControladorBatalla(this, pantallaBatalla);
+controladorBatalla = new ControladorBatalla(this, pantallaBatalla);
 
         configurarListeners();
 
@@ -106,8 +105,7 @@ public class ControladorJuego {
             return;
         }
 
-        // Starting items
-        party.getInventario().agregar(new Pocion("Pocion de Vida", 40));
+party.getInventario().agregar(new Pocion("Pocion de Vida", 40));
         party.getInventario().agregar(new Pocion("Pocion de Vida", 40));
         party.getInventario().agregar(new PocianMana("Pocion de Mana", 30));
         party.getInventario().agregar(new PocianMana("Pocion de Mana", 30));

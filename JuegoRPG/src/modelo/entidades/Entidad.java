@@ -1,4 +1,4 @@
-package modelo.entidades;
+﻿package modelo.entidades;
 
 import java.io.Serializable;
 
@@ -25,7 +25,7 @@ public abstract class Entidad implements Serializable {
     }
 
     public void recibirDaño(int cantidad) {
-        // La reduccion por defensa ya fue calculada en GestorCombate.calcularDañoFisico/Magico
+        
         vidaActual = Math.max(0, vidaActual - Math.max(1, cantidad));
     }
 

@@ -1,4 +1,4 @@
-package controlador;
+﻿package controlador;
 
 import modelo.*;
 import modelo.entidades.*;
@@ -116,11 +116,7 @@ public class ControladorBatalla {
         }
     }
 
-    // ===========================
-    // PLAYER ACTIONS
-    // ===========================
-
-    private void accionAtacar() {
+private void accionAtacar() {
         pantallaBatalla.habilitarAcciones(false);
         pantallaBatalla.agregarLog("Selecciona un enemigo...");
         pantallaBatalla.getPanelArena().activarModoSeleccionEnemigo(new java.util.function.Consumer<Entidad>() {
@@ -235,7 +231,7 @@ public class ControladorBatalla {
                 }
             });
         } else {
-            // TipoObjetivo.YO_MISMO
+            
             final String log = gestorCombate.ejecutarHabilidad(personajeActual, habilidadSeleccionada, personajeActual);
             pantallaBatalla.agregarLog(log);
             pantallaBatalla.actualizarEstados(gestorCombate);
@@ -305,11 +301,7 @@ public class ControladorBatalla {
         t.start();
     }
 
-    // ===========================
-    // ENEMY TURN
-    // ===========================
-
-    private void ejecutarTurnoEnemigo(Enemigo enemigo) {
+private void ejecutarTurnoEnemigo(Enemigo enemigo) {
         final String log = gestorCombate.ejecutarTurnoEnemigo(enemigo);
         final Entidad objetivo = gestorCombate.getUltimoObjetivo();
         final boolean esArea = gestorCombate.isUltimoAtaqueEsArea();

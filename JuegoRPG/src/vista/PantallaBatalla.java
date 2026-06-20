@@ -1,4 +1,4 @@
-package vista;
+﻿package vista;
 
 import modelo.GestorCombate;
 import modelo.Party;
@@ -40,7 +40,7 @@ public class PantallaBatalla extends JPanel {
     }
 
     private void inicializarComponentes() {
-        // === NORTH: title bar ===
+        
         JPanel panelNorth = new JPanel(new BorderLayout());
         panelNorth.setBackground(new Color(15, 12, 30));
         panelNorth.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
@@ -85,8 +85,7 @@ public class PantallaBatalla extends JPanel {
         panelNorth.add(panelEast, BorderLayout.EAST);
         add(panelNorth, BorderLayout.NORTH);
 
-        // === CENTER: arena + side panels ===
-        panelArena = new PanelArena();
+panelArena = new PanelArena();
 
         panelPartyStatus = new JPanel();
         panelPartyStatus.setLayout(new BoxLayout(panelPartyStatus, BoxLayout.Y_AXIS));
@@ -113,13 +112,11 @@ public class PantallaBatalla extends JPanel {
         centroCombate.add(panelEnemyStatus, BorderLayout.EAST);
         add(centroCombate, BorderLayout.CENTER);
 
-        // === SOUTH: log + buttons ===
-        JPanel panelSouth = new JPanel(new BorderLayout(0, 4));
+JPanel panelSouth = new JPanel(new BorderLayout(0, 4));
         panelSouth.setOpaque(false);
         panelSouth.setBorder(BorderFactory.createEmptyBorder(4, 6, 6, 6));
 
-        // Log
-        areaLog = new JTextArea(5, 50);
+areaLog = new JTextArea(5, 50);
         areaLog.setEditable(false);
         areaLog.setFont(new Font("Monospaced", Font.PLAIN, 12));
         areaLog.setBackground(new Color(10, 10, 18));
@@ -131,8 +128,7 @@ public class PantallaBatalla extends JPanel {
         scrollLog.setBorder(BorderFactory.createLineBorder(new Color(40, 40, 60)));
         scrollLog.setPreferredSize(new Dimension(0, 100));
 
-        // Turn indicator + buttons
-        lblTurno = new JLabel("Esperando...", SwingConstants.LEFT);
+lblTurno = new JLabel("Esperando...", SwingConstants.LEFT);
         lblTurno.setFont(new Font("SansSerif", Font.BOLD, 14));
         lblTurno.setForeground(new Color(255, 230, 100));
         lblTurno.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
@@ -150,8 +146,7 @@ public class PantallaBatalla extends JPanel {
         panelBotones.add(btnHabilidad);
         panelBotones.add(btnItem);
 
-        // Turn order list
-        panelOrdenTurnos = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 3));
+panelOrdenTurnos = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 3));
         panelOrdenTurnos.setBackground(new Color(12, 10, 25));
         JScrollPane scrollOrden = new JScrollPane(panelOrdenTurnos,
                 JScrollPane.VERTICAL_SCROLLBAR_NEVER,

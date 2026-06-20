@@ -1,4 +1,4 @@
-package modelo;
+﻿package modelo;
 
 import modelo.entidades.Enemigo;
 import modelo.entidades.Goblin;
@@ -26,8 +26,7 @@ public class CatalogoJuego {
         enemigos.add(new Goblin("Goblin"));
         enemigos.add(new Slime("Slime"));
 
-        // Escalar enemigos para escenarios avanzados
-        if (escenario > 6) {
+if (escenario > 6) {
             int bonus = (escenario / 6) * 10;
             for (Enemigo e : enemigos) {
                 e.setVidaMaxima(e.getVidaMaxima() + bonus * 3);

@@ -1,4 +1,4 @@
-package modelo.entidades;
+﻿package modelo.entidades;
 
 import modelo.Party;
 
@@ -18,7 +18,7 @@ public class Goblin extends Enemigo {
 
     @Override
     public Entidad elegirObjetivo(Party party) {
-        // Goblins attack the ally with the lowest current HP
+        
         List<Personaje> vivos = party.obtenerPersonajesVivos();
         if (vivos.isEmpty()) return null;
         return vivos.stream()

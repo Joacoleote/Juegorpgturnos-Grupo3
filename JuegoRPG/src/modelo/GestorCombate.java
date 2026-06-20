@@ -1,4 +1,4 @@
-package modelo;
+﻿package modelo;
 
 import modelo.entidades.Enemigo;
 import modelo.entidades.Entidad;
@@ -19,8 +19,7 @@ public class GestorCombate {
     private List<Entidad> ordenTurnos;
     private Random random;
 
-    // Tracking del ultimo turno enemigo para animacion
-    private Entidad ultimoObjetivo;
+private Entidad ultimoObjetivo;
     private boolean ultimoAtaqueEsArea;
 
     public GestorCombate() {
@@ -45,9 +44,7 @@ public class GestorCombate {
         return new ArrayList<>(ordenTurnos);
     }
 
-    // === ACCIONES COORDINADAS (llamadas por ControladorBatalla) ===
-
-    public String ejecutarAtaque(Entidad atacante, Entidad objetivo) {
+public String ejecutarAtaque(Entidad atacante, Entidad objetivo) {
         atacante.desactivarDefensa();
         int daño = calcularDañoFisico(atacante, objetivo, 1.0f);
         infligirDaño(objetivo, daño);
@@ -95,9 +92,7 @@ public class GestorCombate {
                 + " causando " + daño + " de daño!";
     }
 
-    // === METODOS DE CALCULO (llamados por Habilidad) ===
-
-    public int calcularDañoFisico(Entidad atacante, Entidad objetivo, float multiplicador) {
+public int calcularDañoFisico(Entidad atacante, Entidad objetivo, float multiplicador) {
         int reduccion = objetivo.estaEnDefensa() ? objetivo.getDefensa() : objetivo.getDefensa() / 2;
         int base = Math.max(1, atacante.getAtaque() - reduccion);
         int variacion = Math.max(1, (int) (base * 0.15));
@@ -119,9 +114,7 @@ public class GestorCombate {
         return Math.max(1, (int) (daño * multiplicador));
     }
 
-    // === METODOS DE APLICACION (llamados por Habilidad) ===
-
-    public void infligirDaño(Entidad objetivo, int daño) {
+public void infligirDaño(Entidad objetivo, int daño) {
         objetivo.recibirDaño(daño);
     }
 
@@ -141,9 +134,7 @@ public class GestorCombate {
         entidad.setVelocidad(entidad.getVelocidad() - reduccion);
     }
 
-    // === ESTADO DEL COMBATE ===
-
-    public ResultadoBatalla verificarFinCombate() {
+public ResultadoBatalla verificarFinCombate() {
         if (party.todosEliminados()) return ResultadoBatalla.DERROTA;
         for (Enemigo e : enemigos) {
             if (e.estaVivo()) return ResultadoBatalla.CONTINUA;
@@ -171,9 +162,7 @@ public class GestorCombate {
         return total;
     }
 
-    // === GETTERS ===
-
-    public Party getParty() { return party; }
+public Party getParty() { return party; }
     public List<Enemigo> getEnemigos() { return enemigos; }
     public List<Entidad> getOrdenTurnos() { return new ArrayList<>(ordenTurnos); }
     public Entidad getUltimoObjetivo() { return ultimoObjetivo; }

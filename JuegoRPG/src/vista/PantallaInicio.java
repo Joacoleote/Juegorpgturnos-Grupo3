@@ -1,4 +1,4 @@
-package vista;
+﻿package vista;
 
 import vista.sprite.GestorSprites;
 import vista.sprite.TipoAnimacion;
@@ -61,8 +61,7 @@ public class PantallaInicio extends JPanel {
                 fm = g2d.getFontMetrics();
                 g2d.drawString(sub, (getWidth() - fm.stringWidth(sub)) / 2, 125);
 
-                // Decorative separator
-                g2d.setColor(new Color(255, 215, 0, 80));
+g2d.setColor(new Color(255, 215, 0, 80));
                 g2d.setStroke(new BasicStroke(1.5f));
                 int lineW = 300;
                 g2d.drawLine((getWidth() - lineW) / 2, 145, (getWidth() + lineW) / 2, 145);
@@ -120,8 +119,7 @@ public class PantallaInicio extends JPanel {
     public JButton getBtnNuevaPartida() { return btnNuevaPartida; }
     public JButton getBtnCargarPartida() { return btnCargarPartida; }
 
-    // ── Showcase estático de héroes (frame 0 del IDLE) ─────────────────────
-    private static class PanelShowcaseHeroes extends JPanel {
+private static class PanelShowcaseHeroes extends JPanel {
 
         private static final String[] CLASES = {"Guerrero", "Mago", "Tanque", "Arquero", "Curandero"};
         private static final Color[] BG = {
@@ -155,21 +153,18 @@ public class PantallaInicio extends JPanel {
             for (int i = 0; i < CLASES.length; i++) {
                 int cx = sx + i * (CELL_W + GAP);
 
-                // fondo semitransparente con borde sutil
-                g2.setColor(BG[i]);
+g2.setColor(BG[i]);
                 g2.fillRoundRect(cx, sy - 6, CELL_W, SPR_H + 12, 14, 14);
                 g2.setColor(new Color(255, 255, 255, 30));
                 g2.drawRoundRect(cx, sy - 6, CELL_W, SPR_H + 12, 14, 14);
 
-                // frame 0 del IDLE (imagen estática)
-                BufferedImage[] frames = gs.getFrames(CLASES[i], TipoAnimacion.IDLE);
+BufferedImage[] frames = gs.getFrames(CLASES[i], TipoAnimacion.IDLE);
                 if (frames != null && frames.length > 0 && frames[0] != null) {
                     int imgX = cx + (CELL_W - SPR_W) / 2;
                     g2.drawImage(frames[0], imgX, sy, SPR_W, SPR_H, null);
                 }
 
-                // nombre de clase
-                g2.setFont(new Font("SansSerif", Font.BOLD, 10));
+g2.setFont(new Font("SansSerif", Font.BOLD, 10));
                 g2.setColor(new Color(210, 195, 255));
                 FontMetrics fm = g2.getFontMetrics();
                 String lbl = CLASES[i].toUpperCase();
