@@ -1,4 +1,4 @@
-﻿package modelo.entidades;
+package modelo.entidades;
 
 import modelo.Party;
 

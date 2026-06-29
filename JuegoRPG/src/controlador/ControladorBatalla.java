@@ -1,4 +1,4 @@
-﻿package controlador;
+package controlador;
 
 import modelo.*;
 import modelo.entidades.*;

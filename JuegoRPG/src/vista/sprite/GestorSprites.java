@@ -1,4 +1,4 @@
-﻿package vista.sprite;
+package vista.sprite;
 
 import java.awt.image.BufferedImage;
 import java.util.HashMap;

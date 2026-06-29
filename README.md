@@ -1,4 +1,4 @@
-# RPG por Turnos — UADE POO 2026 — Grupo 03
+﻿# RPG por Turnos — UADE POO 2026 — Grupo 03
 
 Juego de rol por turnos desarrollado en Java con interfaz gráfica Swing como proyecto final de la materia **Paradigma Orientado a Objetos** de la Universidad Argentina de la Empresa (UADE).
 
@@ -28,7 +28,7 @@ El juego permite al jugador armar una party de hasta **4 héroes** de distintas 
 
 **Características principales:**
 - 5 clases de personaje jugables con habilidades únicas
-- 4 tipos de enemigos con IA propia (incluyendo un boss: el Dragón)
+- 2 tipos de enemigos con IA propia
 - Sistema de turnos ordenado por velocidad
 - Daño físico, mágico e ignorar defensa
 - Buffs y debuffs durante el combate
@@ -99,8 +99,6 @@ Entidad (abstracta)
 └── Enemigo (abstracta)
     ├── Goblin
     ├── Slime
-    ├── Esqueleto
-    └── Dragon
 ```
 
 #### `Entidad` (clase base abstracta)
@@ -154,8 +152,6 @@ Agrega `experienciaOtorgada` y `oroOtorgado`. Cada subclase implementa `elegirOb
 |---|---|---|---|---|---|---|---|
 | **Goblin** | 70 | 22 | 5 | 14 | 40 | 10 | Aliado con menor HP actual |
 | **Slime** | 50 | 18 | 2 | 9 | 30 | 8 | Aleatorio |
-| **Esqueleto** | 75 | 18 | 10 | 9 | 65 | 15 | Aleatorio |
-| **Dragon** | 300 | 35 | 20 | 8 | 250 | 60 | Aliado con mayor HP · soplo cada 3 turnos |
 
 ---
 
@@ -168,7 +164,7 @@ Item (abstracta)
 │   └── Armadura      → bonus de defensa
 └── Consumible (abstracta)
     ├── Pocion        → restaura HP
-    └── PocianMana    → restaura Maná (solo a Personaje)
+    └── PocionMana    → restaura Maná (solo a Personaje)
 ```
 
 El **`Inventario`** es una estructura que agrupa ítems de la party y permite filtrarlos por tipo (`getConsumibles()`, `getEquipables()`).

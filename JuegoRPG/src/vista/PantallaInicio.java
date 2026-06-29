@@ -1,4 +1,4 @@
-﻿package vista;
+package vista;
 
 import vista.sprite.GestorSprites;
 import vista.sprite.TipoAnimacion;

@@ -1,4 +1,4 @@
-﻿package modelo;
+package modelo;
 
 import modelo.entidades.Enemigo;
 import modelo.entidades.Entidad;
@@ -19,17 +19,21 @@ public class GestorCombate {
     private List<Entidad> ordenTurnos;
     private Random random;
 
-private Entidad ultimoObjetivo;
+    private Entidad ultimoObjetivo;
     private boolean ultimoAtaqueEsArea;
+
+    private List<Runnable> revertirEfectos;
 
     public GestorCombate() {
         this.random = new Random();
         this.ordenTurnos = new ArrayList<>();
+        this.revertirEfectos = new ArrayList<>();
     }
 
     public void iniciarBatalla(Party party, List<Enemigo> enemigos) {
         this.party = party;
         this.enemigos = new ArrayList<>(enemigos);
+        this.revertirEfectos = new ArrayList<>();
         for (Personaje p : party.getPersonajes()) {
             p.desactivarDefensa();
         }
@@ -44,7 +48,7 @@ private Entidad ultimoObjetivo;
         return new ArrayList<>(ordenTurnos);
     }
 
-public String ejecutarAtaque(Entidad atacante, Entidad objetivo) {
+    public String ejecutarAtaque(Entidad atacante, Entidad objetivo) {
         atacante.desactivarDefensa();
         int daño = calcularDañoFisico(atacante, objetivo, 1.0f);
         infligirDaño(objetivo, daño);
@@ -92,7 +96,7 @@ public String ejecutarAtaque(Entidad atacante, Entidad objetivo) {
                 + " causando " + daño + " de daño!";
     }
 
-public int calcularDañoFisico(Entidad atacante, Entidad objetivo, float multiplicador) {
+    public int calcularDañoFisico(Entidad atacante, Entidad objetivo, float multiplicador) {
         int reduccion = objetivo.estaEnDefensa() ? objetivo.getDefensa() : objetivo.getDefensa() / 2;
         int base = Math.max(1, atacante.getAtaque() - reduccion);
         int variacion = Math.max(1, (int) (base * 0.15));
@@ -114,7 +118,7 @@ public int calcularDañoFisico(Entidad atacante, Entidad objetivo, float multipl
         return Math.max(1, (int) (daño * multiplicador));
     }
 
-public void infligirDaño(Entidad objetivo, int daño) {
+    public void infligirDaño(Entidad objetivo, int daño) {
         objetivo.recibirDaño(daño);
     }
 
@@ -123,18 +127,37 @@ public void infligirDaño(Entidad objetivo, int daño) {
     }
 
     public void aplicarBuffAtaque(Entidad entidad, int bonus) {
-        entidad.setAtaque(entidad.getAtaque() + bonus);
+        final int anteriorAtaque = entidad.getAtaque();
+        entidad.setAtaque(anteriorAtaque + bonus);
+        revertirEfectos.add(new Runnable() {
+            @Override public void run() { entidad.setAtaque(anteriorAtaque); }
+        });
     }
 
     public void aplicarBuffDefensa(Entidad entidad, int bonus) {
-        entidad.setDefensa(entidad.getDefensa() + bonus);
+        final int anteriorDefensa = entidad.getDefensa();
+        entidad.setDefensa(anteriorDefensa + bonus);
+        revertirEfectos.add(new Runnable() {
+            @Override public void run() { entidad.setDefensa(anteriorDefensa); }
+        });
     }
 
     public void aplicarDebuffVelocidad(Entidad entidad, int reduccion) {
-        entidad.setVelocidad(entidad.getVelocidad() - reduccion);
+        final int anteriorVelocidad = entidad.getVelocidad();
+        entidad.setVelocidad(anteriorVelocidad - reduccion);
+        revertirEfectos.add(new Runnable() {
+            @Override public void run() { entidad.setVelocidad(anteriorVelocidad); }
+        });
     }
 
-public ResultadoBatalla verificarFinCombate() {
+    public void limpiarEfectosTemporales() {
+        for (Runnable revertir : revertirEfectos) {
+            revertir.run();
+        }
+        revertirEfectos.clear();
+    }
+
+    public ResultadoBatalla verificarFinCombate() {
         if (party.todosEliminados()) return ResultadoBatalla.DERROTA;
         for (Enemigo e : enemigos) {
             if (e.estaVivo()) return ResultadoBatalla.CONTINUA;
@@ -162,7 +185,7 @@ public ResultadoBatalla verificarFinCombate() {
         return total;
     }
 
-public Party getParty() { return party; }
+    public Party getParty() { return party; }
     public List<Enemigo> getEnemigos() { return enemigos; }
     public List<Entidad> getOrdenTurnos() { return new ArrayList<>(ordenTurnos); }
     public Entidad getUltimoObjetivo() { return ultimoObjetivo; }

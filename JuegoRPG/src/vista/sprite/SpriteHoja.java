@@ -1,4 +1,4 @@
-﻿package vista.sprite;
+package vista.sprite;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

@@ -1,4 +1,4 @@
-﻿package vista;
+package vista;
 
 import modelo.Party;
 import modelo.entidades.*;

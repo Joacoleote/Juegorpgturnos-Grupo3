@@ -3,7 +3,7 @@ package modelo;
 import modelo.entidades.Personaje;
 import modelo.items.Item;
 import modelo.items.Pocion;
-import modelo.items.PocianMana;
+import modelo.items.PocionMana;
 import modelo.items.Arma;
 import modelo.items.Armadura;
 
@@ -41,7 +41,7 @@ public class GestorRecompensas {
         if (tirada < 50) {
             recompensas.add(new Pocion("Pocion de Vida", 40));
         } else if (tirada < 70) {
-            recompensas.add(new PocianMana("Pocion de Mana", 30));
+            recompensas.add(new PocionMana("Pocion de Mana", 30));
         } else if (tirada < 80) {
             recompensas.add(new Pocion("Pocion Grande de Vida", 80));
         } else if (tirada < 90 && escenario >= 3) {

@@ -10,49 +10,47 @@ import java.util.List;
 
 public class Inventario implements Serializable {
 
-    private List<Item> items;
+    private List<Consumible> consumibles;
+    private List<Equipable> equipables;
 
     public Inventario() {
-        this.items = new ArrayList<>();
+        this.consumibles = new ArrayList<>();
+        this.equipables = new ArrayList<>();
     }
 
     public void agregar(Item item) {
-        items.add(item);
+        if (item instanceof Consumible) {
+            consumibles.add((Consumible) item);
+        } else if (item instanceof Equipable) {
+            equipables.add((Equipable) item);
+        }
     }
 
     public void remover(Item item) {
-        items.remove(item);
+        consumibles.remove(item);
+        equipables.remove(item);
     }
 
     public List<Item> getItems() {
-        return new ArrayList<>(items);
+        List<Item> todos = new ArrayList<>();
+        todos.addAll(consumibles);
+        todos.addAll(equipables);
+        return todos;
     }
 
     public List<Consumible> getConsumibles() {
-        List<Consumible> consumibles = new ArrayList<>();
-        for (Item item : items) {
-            if (item instanceof Consumible) {
-                consumibles.add((Consumible) item);
-            }
-        }
-        return consumibles;
+        return new ArrayList<>(consumibles);
     }
 
     public List<Equipable> getEquipables() {
-        List<Equipable> equipables = new ArrayList<>();
-        for (Item item : items) {
-            if (item instanceof Equipable) {
-                equipables.add((Equipable) item);
-            }
-        }
-        return equipables;
+        return new ArrayList<>(equipables);
     }
 
     public boolean estaVacio() {
-        return items.isEmpty();
+        return consumibles.isEmpty() && equipables.isEmpty();
     }
 
     public int getCantidad() {
-        return items.size();
+        return consumibles.size() + equipables.size();
     }
 }

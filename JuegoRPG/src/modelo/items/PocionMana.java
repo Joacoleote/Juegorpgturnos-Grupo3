@@ -3,11 +3,11 @@ package modelo.items;
 import modelo.entidades.Entidad;
 import modelo.entidades.Personaje;
 
-public class PocianMana extends Consumible {
+public class PocionMana extends Consumible {
 
     private int cantidadMana;
 
-    public PocianMana(String nombre, int cantidadMana) {
+    public PocionMana(String nombre, int cantidadMana) {
         this.nombre = nombre;
         this.cantidadMana = cantidadMana;
         this.descripcion = "Restaura " + cantidadMana + " puntos de mana.";

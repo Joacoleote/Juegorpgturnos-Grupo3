@@ -1,4 +1,4 @@
-﻿package modelo;
+package modelo;
 
 import modelo.entidades.Enemigo;
 import modelo.entidades.Goblin;

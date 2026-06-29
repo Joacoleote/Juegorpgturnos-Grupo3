@@ -1,4 +1,4 @@
-﻿package controlador;
+package controlador;
 
 import modelo.*;
 import modelo.entidades.*;
@@ -59,7 +59,7 @@ public class ControladorJuego {
 
         ventana.add(contenedor);
 
-controladorBatalla = new ControladorBatalla(this, pantallaBatalla);
+        controladorBatalla = new ControladorBatalla(this, pantallaBatalla);
 
         configurarListeners();
 
@@ -105,10 +105,10 @@ controladorBatalla = new ControladorBatalla(this, pantallaBatalla);
             return;
         }
 
-party.getInventario().agregar(new Pocion("Pocion de Vida", 40));
         party.getInventario().agregar(new Pocion("Pocion de Vida", 40));
-        party.getInventario().agregar(new PocianMana("Pocion de Mana", 30));
-        party.getInventario().agregar(new PocianMana("Pocion de Mana", 30));
+        party.getInventario().agregar(new Pocion("Pocion de Vida", 40));
+        party.getInventario().agregar(new PocionMana("Pocion de Mana", 30));
+        party.getInventario().agregar(new PocionMana("Pocion de Mana", 30));
 
         partidaActual = new Partida(party);
         iniciarBatalla();
@@ -144,6 +144,12 @@ party.getInventario().agregar(new Pocion("Pocion de Vida", 40));
 
     public void onBatallaTerminada(ResultadoBatalla resultado, GestorCombate gestorCombate) {
         int escenario = partidaActual.getEscenarioActual();
+
+        gestorCombate.limpiarEfectosTemporales();
+
+        Batalla batalla = new Batalla(escenario, gestorCombate.getEnemigos());
+        batalla.completar(resultado == ResultadoBatalla.VICTORIA);
+        partidaActual.registrarBatalla(batalla);
 
         if (resultado == ResultadoBatalla.VICTORIA) {
             int expTotal = gestorCombate.calcularExpTotal();
